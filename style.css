@@ -243,3 +243,16 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* WhatsApp Contact Button */
+.whatsapp-btn {
+    background-color: #25D366;
+    color: #ffffff;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.whatsapp-btn:hover {
+    background-color: #128C7E;
+}
