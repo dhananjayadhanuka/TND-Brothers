@@ -220,6 +220,19 @@ footer {
     font-size: 13px;
 }
 
+/* Footer navigation added for easier browsing */
+.back-to-top {
+    display: inline-block;
+    margin-top: 12px;
+    color: #d8b779;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.back-to-top:hover {
+    text-decoration: underline;
+}
+
 @media (max-width: 750px) {
     .navbar {
         flex-direction: column;
@@ -242,17 +255,4 @@ footer {
     .about {
         grid-template-columns: 1fr;
     }
-}
-
-
-/* WhatsApp Contact Button */
-.whatsapp-btn {
-    background-color: #25D366;
-    color: #ffffff;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
-}
-
-.whatsapp-btn:hover {
-    background-color: #128C7E;
 }
