@@ -256,3 +256,61 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* Admin Button */
+.admin-btn {
+    background: #b38a4a;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+}
+
+/* Admin Login Page */
+.login-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 40px;
+    background: #f4f5f0;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.login-container h2 {
+    color: #183e30;
+    margin-bottom: 15px;
+}
+
+.login-container label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 12px;
+    background: #183e30;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.login-container button:hover {
+    background: #b38a4a;
+}
+
+.login-container a {
+    display: inline-block;
+    margin-top: 20px;
+    color: #183e30;
+}
