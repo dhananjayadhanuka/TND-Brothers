@@ -274,7 +274,7 @@ body:has(.login-container) {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #f4f5f0;
+    background: #dce8df;
 }
 
 .login-container {
@@ -327,8 +327,6 @@ body:has(.login-container) {
     margin-top: 20px;
     color: #183e30;
 }
-
-
 
 
 /* Improve Mobile Navigation */
