@@ -266,15 +266,28 @@ footer {
     border-radius: 6px;
 }
 
+
 /* Admin Login Page */
-.login-container {
-    max-width: 400px;
-    margin: 100px auto;
-    padding: 40px;
+
+body:has(.login-container) {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: #f4f5f0;
+}
+
+.login-container {
+    width: 90%;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 30px;
+    background: #ffffff;
     border-radius: 12px;
     text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
+
 
 .login-container h2 {
     color: #183e30;
@@ -314,6 +327,7 @@ footer {
     margin-top: 20px;
     color: #183e30;
 }
+
 
 
 
