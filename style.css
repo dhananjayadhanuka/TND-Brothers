@@ -314,3 +314,13 @@ footer {
     margin-top: 20px;
     color: #183e30;
 }
+
+
+
+/* Improve Mobile Navigation */
+@media (max-width: 600px) {
+    nav a {
+        font-size: 13px;
+        padding: 8px 5px;
+    }
+}
