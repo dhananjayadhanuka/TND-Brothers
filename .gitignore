@@ -1,0 +1,11 @@
+
+# Local database configuration
+db.php
+
+# Temporary setup and test files
+create_admin.php
+test_db.php
+
+# Environment files
+.env
+.env.*
