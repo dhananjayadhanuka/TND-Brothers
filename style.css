@@ -336,3 +336,57 @@ body:has(.login-container) {
         padding: 8px 5px;
     }
 }
+
+/* Dash bord add botton */
+.add-project-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    margin: 15px 10px;
+    background-color: #183e30;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.add-project-btn:hover {
+    background-color: #b38a4a;
+}
+
+.add-project-btn,
+.add-project-btn:visited {
+    color: #ffffff !important;
+}
+
+.add-project-btn:hover {
+    color: #ffffff !important;
+    background-color: #b38a4a;
+}
+
+.project-card {
+    background: #f4f5f0;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.project-card img {
+    width: 100%;
+    max-width: 300px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.project-card h3 {
+    color: #183e30;
+    margin: 12px 0 5px;
+}
+
+.project-description {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    margin-top: 10px;
+}
