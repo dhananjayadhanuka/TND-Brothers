@@ -2,15 +2,15 @@
 session_start();
 
 if (!isset($_SESSION['admin_id'])) {
-    header('Location: admin.php');
+    header("Location: admin.php");
     exit;
 }
+
+require_once "db.php";
 
 if (empty($_SESSION["csrf_token"])) {
     $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
 }
-
-require_once "db.php";
 
 $result = $conn->query(
     "SELECT id, title, description, project_type, image_path
@@ -18,10 +18,34 @@ $result = $conn->query(
      ORDER BY created_at DESC, id DESC"
 );
 
-$username = htmlspecialchars(
-    $_SESSION['admin_username'],
-    ENT_QUOTES,
-    'UTF-8'
+$projects = [];
+$housePlans = 0;
+$designs = 0;
+
+if ($result) {
+    while ($project = $result->fetch_assoc()) {
+        $projects[] = $project;
+
+        if ($project["project_type"] === "house_plan") {
+            $housePlans++;
+        } elseif ($project["project_type"] === "3d_design") {
+            $designs++;
+        }
+    }
+}
+
+$totalProjects = count($projects);
+
+function escapeHtml($value) {
+    return htmlspecialchars(
+        (string)$value,
+        ENT_QUOTES,
+        "UTF-8"
+    );
+}
+
+$username = escapeHtml(
+    $_SESSION["admin_username"] ?? "Admin"
 );
 ?>
 <!DOCTYPE html>
@@ -30,78 +54,176 @@ $username = htmlspecialchars(
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | TND Brothers</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css?v=3">
 </head>
 <body>
-    <div class="login-container">
-        <h2>Admin Dashboard</h2>
-        <p>Welcome, <?php echo $username; ?>!</p>
-        <p>TND Brothers Portfolio System</p>
 
-        <a href="add_project.php" class="add-project-btn">
-         + Add New Project
-         </a>
-        <a href="logout.php">Logout</a>
+<header class="dashboard-header">
+    <div class="header-inner">
+        <a href="dashboard.php" class="dashboard-logo">
+            TND <span>Brothers</span>
+            <small>ADMIN STUDIO</small>
+        </a>
 
-                <h3>Uploaded Projects</h3>
+        <nav class="dashboard-nav">
+            <a href="index.html">View Website</a>
+            <a href="projects.php">Public Portfolio</a>
+            <a href="logout.php" class="logout-btn">Log Out</a>
+        </nav>
+    </div>
+</header>
 
-        <?php if ($result && $result->num_rows > 0): ?>
+<main class="dashboard-container">
 
-            <?php while ($project = $result->fetch_assoc()): ?>
+    <section class="dashboard-welcome">
+        <div class="welcome-text">
+            <span class="section-label">PORTFOLIO MANAGEMENT</span>
+            <h1>Admin Dashboard<span class="gold-dot">.</span></h1>
+            <p>
+                Welcome back, <strong><?php echo $username; ?></strong>.
+                Manage your house plans and 3D designs in one place.
+            </p>
+        </div>
 
-                <div class="project-card">
+        <a href="add_project.php" class="primary-btn">
+            + Add New Project
+        </a>
+    </section>
 
-                    <img
-                        src="<?php echo htmlspecialchars($project['image_path'], ENT_QUOTES, 'UTF-8'); ?>"
-                        alt="Project Image"
-                    >
+    <?php if (isset($_GET["project_added"])): ?>
+        <div class="success-message">Project added successfully!</div>
+    <?php elseif (isset($_GET["updated"])): ?>
+        <div class="success-message">Project updated successfully!</div>
+    <?php elseif (isset($_GET["deleted"])): ?>
+        <div class="success-message">Project deleted successfully!</div>
+    <?php endif; ?>
 
-                    <h3>
-                        <?php echo htmlspecialchars($project['title'], ENT_QUOTES, 'UTF-8'); ?>
-                    </h3>
+    <section class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">▦</div>
+            <p>Total Projects</p>
+            <h2><?php echo $totalProjects; ?></h2>
+            <span>Portfolio entries</span>
+        </div>
 
-                    <p>
-                        <?php echo htmlspecialchars($project['project_type'], ENT_QUOTES, 'UTF-8'); ?>
-                    </p>
+        <div class="stat-card">
+            <div class="stat-icon">⌂</div>
+            <p>House Plans</p>
+            <h2><?php echo $housePlans; ?></h2>
+            <span>2D floor plans</span>
+        </div>
 
-                    
-                    <p class="project-description">
-                    <?php echo nl2br(htmlspecialchars(
-                        $project['description'] ?? '',
-                        ENT_QUOTES,
-                        'UTF-8'
-                      )); ?>
-                    </p>
+        <div class="stat-card">
+            <div class="stat-icon">◇</div>
+            <p>3D Designs</p>
+            <h2><?php echo $designs; ?></h2>
+            <span>Visual concepts</span>
+        </div>
+    </section>
 
-                    <a href="edit_project.php?id=<?php echo (int)$project['id']; ?>"
-                     class="add-project-btn">
-                     Edit Project </a>
+    <section class="projects-section">
+        <div class="projects-heading">
+            <div>
+                <span class="section-label">YOUR WORK</span>
+                <h2>Uploaded Projects</h2>
+                <p>Update project information, replace images or manage your portfolio.</p>
+            </div>
 
-                    <form action="delete_project.php" method="POST"
-                    onsubmit="return confirm('Delete this project permanently?');">
+            <span class="project-count">
+                <?php echo $totalProjects; ?> Projects
+            </span>
+        </div>
 
-                        <input type="hidden" name="project_id"
-                            value="<?php echo (int)$project['id']; ?>">
+        <?php if ($totalProjects > 0): ?>
 
-                        <input type="hidden" name="csrf_token"
-                            value="<?php echo htmlspecialchars(
-                                $_SESSION['csrf_token'],
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ); ?>">
+            <div class="projects-grid">
 
-                        <button type="submit">Delete Project</button>
-                  </form>
+                <?php foreach ($projects as $project): ?>
 
-                </div>
+                    <article class="project-card">
+                        <div class="project-image">
+                            <img
+                                src="<?php echo escapeHtml($project['image_path']); ?>"
+                                alt="<?php echo escapeHtml($project['title']); ?>"
+                            >
 
-            <?php endwhile; ?>
+                            <span class="project-type">
+                                <?php
+                                echo $project["project_type"] === "house_plan"
+                                    ? "House Plan"
+                                    : "3D Design";
+                                ?>
+                            </span>
+                        </div>
+
+                        <div class="project-content">
+                            <h3>
+                                <?php echo escapeHtml($project["title"]); ?>
+                            </h3>
+
+                            <p class="project-description">
+                                <?php
+                                echo nl2br(
+                                    escapeHtml($project["description"] ?? "")
+                                );
+                                ?>
+                            </p>
+
+                            <div class="project-actions">
+                                <a
+                                    href="edit_project.php?id=<?php echo (int)$project['id']; ?>"
+                                    class="edit-btn"
+                                >
+                                    Edit Project
+                                </a>
+
+                                <form
+                                    action="delete_project.php"
+                                    method="POST"
+                                    onsubmit="return confirm('Delete this project permanently?');"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="project_id"
+                                        value="<?php echo (int)$project['id']; ?>"
+                                    >
+
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        value="<?php echo escapeHtml($_SESSION['csrf_token']); ?>"
+                                    >
+
+                                    <button type="submit" class="delete-btn">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </article>
+
+                <?php endforeach; ?>
+
+            </div>
 
         <?php else: ?>
 
-            <p>No projects uploaded yet.</p>
+            <div class="empty-state">
+                <h3>No Projects Yet</h3>
+                <p>Start by uploading your first house plan or 3D design.</p>
+                <a href="add_project.php" class="primary-btn">
+                    + Add Your First Project
+                </a>
+            </div>
 
         <?php endif; ?>
-    </div>
+    </section>
+
+</main>
+
+<footer class="dashboard-footer">
+    © 2026 TND Brothers. All rights reserved.
+</footer>
+
 </body>
 </html>
