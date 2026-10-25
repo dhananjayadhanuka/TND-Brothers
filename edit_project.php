@@ -47,7 +47,7 @@ if (empty($_SESSION['csrf_token'])) {
 <div class="login-container">
     <h2>Edit Project</h2>
 
-    <form action="update_project.php" method="POST">
+    <form action="update_project.php" method="POST" enctype="multipart/form-data">
 
         <input type="hidden" name="project_id"
                value="<?php echo (int)$project['id']; ?>">
@@ -83,6 +83,15 @@ if (empty($_SESSION['csrf_token'])) {
                 3D Design
             </option>
         </select>
+
+        <label for="project_image">Change Project Image (Optional)</label>
+
+<input
+    type="file"
+    id="project_image"
+    name="project_image"
+    accept=".jpg,.jpeg,.png,.webp"
+>
 
         <button type="submit">Update Project</button>
     </form>
